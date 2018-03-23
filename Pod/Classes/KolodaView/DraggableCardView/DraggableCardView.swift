@@ -20,6 +20,7 @@ protocol DraggableCardDelegate: class {
     
     func card(_ card: DraggableCardView, wasDraggedWithFinishPercentage percentage: CGFloat, inDirection direction: SwipeResultDirection)
     func card(_ card: DraggableCardView, wasSwipedIn direction: SwipeResultDirection)
+    func card(_ card: DraggableCardView, didSwipedIn direction: SwipeResultDirection)
     func card(_ card: DraggableCardView, shouldSwipeIn direction: SwipeResultDirection) -> Bool
     func card(cardWasReset card: DraggableCardView)
     func card(cardWasTapped card: DraggableCardView)
@@ -370,6 +371,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
         translationAnimation?.toValue = NSValue(cgPoint: animationPointForDirection(direction))
         translationAnimation?.completionBlock = { _, _ in
             self.removeFromSuperview()
+            self.delegate?.card(self, didSwipedIn: direction)
         }
         layer.pop_add(translationAnimation, forKey: "swipeTranslationAnimation")
     }
@@ -430,6 +432,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             swipePositionAnimation?.completionBlock = {
                 (_, _) in
                 self.removeFromSuperview()
+                self.delegate?.card(self, didSwipedIn: direction)
             }
             
             layer.pop_add(swipePositionAnimation, forKey: "swipePositionAnimation")

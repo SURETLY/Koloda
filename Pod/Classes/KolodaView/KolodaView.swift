@@ -43,6 +43,7 @@ public protocol KolodaViewDelegate: class {
     func koloda(_ koloda: KolodaView, allowedDirectionsForIndex index: Int) -> [SwipeResultDirection]
     func koloda(_ koloda: KolodaView, shouldSwipeCardAt index: Int, in direction: SwipeResultDirection) -> Bool
     func koloda(_ koloda: KolodaView, didSwipeCardAt index: Int, in direction: SwipeResultDirection)
+    func koloda(_ koloda: KolodaView, didFinishSwipeCardAt index: Int, in direction: SwipeResultDirection)
     func kolodaDidRunOutOfCards(_ koloda: KolodaView)
     func koloda(_ koloda: KolodaView, didSelectCardAt index: Int)
     func kolodaShouldApplyAppearAnimation(_ koloda: KolodaView) -> Bool
@@ -62,6 +63,7 @@ public extension KolodaViewDelegate {
     func koloda(_ koloda: KolodaView, shouldSwipeCardAt index: Int, in direction: SwipeResultDirection) -> Bool { return true }
     func koloda(_ koloda: KolodaView, allowedDirectionsForIndex index: Int) -> [SwipeResultDirection] { return [.left, .right] }
     func koloda(_ koloda: KolodaView, didSwipeCardAt index: Int, in direction: SwipeResultDirection) {}
+    func koloda(_ koloda: KolodaView, didFinishSwipeCardAt index: Int, in direction: SwipeResultDirection) {}
     func kolodaDidRunOutOfCards(_ koloda: KolodaView) {}
     func koloda(_ koloda: KolodaView, didSelectCardAt index: Int) {}
     func kolodaShouldApplyAppearAnimation(_ koloda: KolodaView) -> Bool { return true }
@@ -297,6 +299,9 @@ open class KolodaView: UIView, DraggableCardDelegate {
     
     func card(_ card: DraggableCardView, wasSwipedIn direction: SwipeResultDirection) {
         swipedAction(direction)
+    }
+    func card(_ card: DraggableCardView, didSwipedIn direction: SwipeResultDirection) {
+        delegate?.koloda(self, didFinishSwipeCardAt: currentCardIndex, in: direction)
     }
     
     func card(cardWasReset card: DraggableCardView) {
